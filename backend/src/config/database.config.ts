@@ -1,11 +1,30 @@
-import {Pool} from 'pg';
+// import {Pool} from 'pg';
 
-const pool = new Pool({
-    user:'postgres',
+import {DataSource} from 'typeorm';
+import { User } from '../api/user/user.entity';
+
+export const AppDataSource = new DataSource({
+    type:'postgres',
+    username:'postgres',
     host:'localhost',
     database:'students',
     password:'12Jan2001@',
-    port:5432
-})
+    port:5432,
+    entities: [User],
+    synchronize: true,
+});
 
-export default pool;
+
+
+// const pool = new Pool({
+//     user:'postgres',
+//     host:'localhost',
+//     database:'students',
+//     password:'12Jan2001@',
+//     port:5432
+// })
+
+// export default pool;
+
+
+export default AppDataSource;

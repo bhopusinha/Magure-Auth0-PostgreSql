@@ -1,14 +1,25 @@
+import 'reflect-metadata';
 import express from "express";
-import { auth, requiresAuth } from "express-openid-connect";
+import { auth} from "express-openid-connect";
 import env from "./config/environment.config";
-import { studentRouter, userRouter } from "./api/index";
 import cors from 'cors';
+import AppDataSource from "./config/database.config";
+import {userRouter} from './api/index';
+import morgan from 'morgan';
 
 
 const app = express();
 
+app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
+
+
+AppDataSource.initialize().then(()=>{
+    console.log(`dataSource is connected successfully!`);
+}).catch((err)=>{
+  console.log('ERROR CONNECTING WITH DATABSE',err);
+})
 
 const config = {
   authRequired: false,
@@ -20,9 +31,7 @@ const config = {
 };
 
 app.use(auth(config));
-
-app.use(userRouter);
-app.use('/api/v1/students',studentRouter);
+app.use('/api/user',userRouter)
 
 
 export default app;
